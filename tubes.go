@@ -144,6 +144,38 @@ func updateSaldo(daftarPengeluaran *[]pengeluaran){
 		}
 	}
 }
+
+func selisihAnggaran(daftar []pengeluaran) {
+	total := 0
+	for _, p := range daftar {
+		total += p.Nominal
+	}
+	selisih := anggaranAwal - total
+	fmt.Printf("Total Pengeluaran: Rp. %d\n", total)
+	fmt.Printf("Selisih Anggaran: Rp. %d\n", selisih)
+	if selisih < 0 {
+		fmt.Println("Pengeluaran melebihi anggaran! Berikut saran penghematan:")
+		saranHemat(daftar)
+	} else {
+		fmt.Println("Pengeluaran masih dalam batas anggaran.")
+	}
+}
+
+func saranHemat(daftar []pengeluaran) {
+	if len(daftar) == 0 {
+		fmt.Println("Tidak ada data pengeluaran.")
+		return
+	}
+	maks := daftar[0].Nominal
+	kat := daftar[0].Kategori
+	for _, p := range daftar {
+		if p.Nominal > maks {
+			maks = p.Nominal
+			kat = p.Kategori
+		}
+	}
+	fmt.Printf("- Kategori: %s, Jumlah: Rp. %d\n", kat, maks)
+}
 			
 func menuUpdate(){
 	fmt.Println("\n-----------------------")
