@@ -242,7 +242,7 @@ func binarySearch(daftar data, jumlahData int, kategori string) {
 		}
 	}
 	if !ditemukan {
-		fmt.Println("Kategori tidak ditemukan.")
+		fmt.Println("Kategori tidak ditemukan")
 	}
 }
 
@@ -267,3 +267,4 @@ func historyTransaksi(daftar data, jumlahData int) {
 		fmt.Printf("%d. %s - Rp %d\n", i+1, daftar[i].Kategori, daftar[i].Nominal)
 	}
 }
+
