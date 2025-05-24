@@ -35,7 +35,7 @@ func main() {
 	var pilih int
 	var daftar data
 	var jumlahData int
-	for pilih != 7 {
+	for pilih != 6 {
 		menu()
 		fmt.Print("Pilih (1/2/3/4/5/6/7)? ")
 		fmt.Scan(&pilih)
@@ -62,6 +62,33 @@ func infoSaldo(daftar data, jumlahData int) {
 	fmt.Printf("Saldo saat ini: Rp. %d\n", saldo)
 	fmt.Printf("Total anggaran: Rp. %d\n", anggaranAwal)
 	fmt.Printf("Total pengeluaran: Rp. %d\n", total)
+}
+
+func updateSaldo(daftar *data, jumlahData *int) {
+	var pilih int
+	for pilih != 4 {
+		menuUpdate()
+		fmt.Print("Pilih (1/2/3/4)? ")
+		fmt.Scan(&pilih)
+		if pilih == 1 {
+			tambahPengeluaran(daftar, jumlahData)
+		} else if pilih == 2 {
+			editPengeluaran(daftar, jumlahData)
+		} else if pilih == 3 {
+			hapusPengeluaran(daftar, jumlahData)
+		}
+	}
+}
+
+func menuUpdate() {
+	fmt.Println("---------------------------")
+	fmt.Println("        MENU UPDATE        ")
+	fmt.Println("---------------------------")
+	fmt.Println("1. Tambah Pengeluaran")
+	fmt.Println("2. Edit Data Pengeluaran")
+	fmt.Println("3. Hapus Data Pengeluaran")
+	fmt.Println("4. Exit")
+	fmt.Println("---------------------------")
 }
 
 func bacaKategori(label string) string {
@@ -145,19 +172,80 @@ func hapusPengeluaran(daftar *data, jumlahData *int) {
 	fmt.Println("Saldo berhasil diupdate")
 }
 
-func updateSaldo(daftar *data, jumlahData *int) {
+func historyTransaksi(daftar data, jumlahData int) {
+	if jumlahData == 0 {
+		fmt.Println("Belum ada pengeluaran.")
+		return
+	}
 	var pilih int
 	for pilih != 4 {
-		menuUpdate()
+		menuHistory()
 		fmt.Print("Pilih (1/2/3/4)? ")
 		fmt.Scan(&pilih)
+
 		if pilih == 1 {
-			tambahPengeluaran(daftar, jumlahData)
+			fmt.Println("Riwayat berdasarkan waktu input:")
+			tampilkanHistory(daftar, jumlahData)
 		} else if pilih == 2 {
-			editPengeluaran(daftar, jumlahData)
+			fmt.Println("Riwayat berdasarkan nominal terbesar:")
+			salin := copyData(daftar, jumlahData)
+			selectionSortTurun(&salin, jumlahData)
+			tampilkanHistory(salin, jumlahData)
 		} else if pilih == 3 {
-			hapusPengeluaran(daftar, jumlahData)
+			fmt.Println("Riwayat berdasarkan nominal terkecil:")
+			salin := copyData(daftar, jumlahData)
+			insertionSortNaik(&salin, jumlahData)
+			tampilkanHistory(salin, jumlahData)
 		}
+	}
+}
+
+func menuHistory() {
+	fmt.Println("---------------------------------")
+	fmt.Println("          MENU HISTORY           ")
+	fmt.Println("---------------------------------")
+	fmt.Println("1. Berdasarkan Waktu Input")
+	fmt.Println("2. Berdasarkan Nominal Terbesar")
+	fmt.Println("3. Berdasarkan Nominal Terkecil")
+	fmt.Println("4. Exit")
+	fmt.Println("---------------------------------")
+}
+
+func tampilkanHistory(daftar data, jumlahData int) {
+	for i := 0; i < jumlahData; i++ {
+		fmt.Printf("%d. %s - Rp %d\n", i+1, daftar[i].Kategori, daftar[i].Nominal)
+	}
+}
+
+func copyData(dataAsli data, jumlahData int) data {
+	var dataSalinan data
+	for i := 0; i < jumlahData; i++ {
+		dataSalinan[i] = dataAsli[i]
+	}
+	return dataSalinan
+}
+
+func insertionSortNaik(daftar *data, jumlahData int) {
+	for i := 1; i < jumlahData; i++ {
+		temp := daftar[i]
+		j := i - 1
+		for j >= 0 && daftar[j].Nominal > temp.Nominal {
+			daftar[j+1] = daftar[j]
+			j--
+		}
+		daftar[j+1] = temp
+	}
+}
+
+func selectionSortTurun(daftar *data, jumlahData int) {
+	for i := 0; i < jumlahData-1; i++ {
+		maxIdx := i
+		for j := i + 1; j < jumlahData; j++ {
+			if daftar[j].Nominal > daftar[maxIdx].Nominal {
+				maxIdx = j
+			}
+		}
+		daftar[i], daftar[maxIdx] = daftar[maxIdx], daftar[i]
 	}
 }
 
@@ -170,7 +258,8 @@ func selisihAnggaran(daftar data, jumlahData int) {
 	fmt.Printf("Total Pengeluaran: Rp. %d\n", total)
 	fmt.Printf("Selisih Anggaran: Rp. %d\n", selisih)
 	if selisih < 0 {
-		fmt.Println("Pengeluaran melebihi anggaran! Berikut saran penghematan:")
+		fmt.Println("Pengeluaran melebihi anggaran!")
+		
 		saranHemat(daftar, jumlahData)
 	} else {
 		fmt.Println("Pengeluaran masih dalam batas anggaran.")
@@ -193,11 +282,41 @@ func saranHemat(daftar data, jumlahData int) {
 	fmt.Printf("- Kategori: %s, Jumlah: Rp. %d\n", kat, maks)
 }
 
+func cariPengeluaran(daftar *data, jumlahData *int){
+	var pilih int
+	for pilih != 3{
+		menuCariData()
+		fmt.Print("Pilih (1/2/3)? ")
+		fmt.Scan(&pilih)
+		if pilih == 1 {
+			var kategori string
+			fmt.Print("Masukkan kategori: ")
+			fmt.Scan(&kategori)
+			sequentialSearch(*daftar, *jumlahData, kategori)
+		} else if pilih == 2 {
+			var nominal int
+			fmt.Print("Masukkan nominal: Rp ")
+			fmt.Scan(&nominal)
+			binarySearch(*daftar, *jumlahData, nominal)
+		}
+	}
+}
+
+func menuCariData(){
+	fmt.Println("-------------------------")
+	fmt.Println("       MENU UPDATE       ")
+	fmt.Println("-------------------------")
+	fmt.Println("1. Berdasarkan Kategori")
+	fmt.Println("2. Berdasarkan Nominal")
+	fmt.Println("3. Exit")
+	fmt.Println("-------------------------")
+}
+
 func sequentialSearch(daftar data, jumlahData int, kategori string) {
 	ditemukan := false
 	for i := 0; i < jumlahData; i++ {
 		if daftar[i].Kategori == kategori {
-			fmt.Printf("Ditemukan: %s - Rp %d (di indeks %d)\n", daftar[i].Kategori, daftar[i].Nominal, i+1)
+			fmt.Printf("Ditemukan: %s - Rp %d\n", daftar[i].Kategori, daftar[i].Nominal)
 			ditemukan = true
 		}
 	}
@@ -226,13 +345,13 @@ func binarySearch(daftar data, jumlahData int, nominal int) {
 	for left <= right && !ditemukan {
 		mid := (left + right) / 2
 		if daftar[mid].Nominal == nominal {
-			fmt.Printf("Ditemukan: %s - Rp %d (di indeks %d setelah diurutkan)\n", daftar[mid].Kategori, daftar[mid].Nominal, mid+1)
+			fmt.Printf("Ditemukan: %s - Rp %d\n", daftar[mid].Kategori, daftar[mid].Nominal)
 			ditemukan = true
 			for i := mid - 1; i >= 0 && daftar[i].Nominal == nominal; i-- {
-				fmt.Printf("Ditemukan: %s - Rp %d (di indeks %d setelah diurutkan)\n", daftar[i].Kategori, daftar[i].Nominal, i+1)
+				fmt.Printf("Ditemukan: %s - Rp %d\n", daftar[i].Kategori, daftar[i].Nominal)
 			}
 			for i := mid + 1; i < jumlahData && daftar[i].Nominal == nominal; i++ {
-				fmt.Printf("Ditemukan: %s - Rp %d (di indeks %d setelah diurutkan)\n", daftar[i].Kategori, daftar[i].Nominal, i+1)
+				fmt.Printf("Ditemukan: %s - Rp %d\n", daftar[i].Kategori, daftar[i].Nominal)
 			}
 		} else if nominal < daftar[mid].Nominal {
 			right = mid - 1
@@ -242,57 +361,5 @@ func binarySearch(daftar data, jumlahData int, nominal int) {
 	}
 	if !ditemukan {
 		fmt.Println("Nominal tidak ditemukan.")
-	}
-}
-
-func menuUpdate() {
-	fmt.Println("-----------------------")
-	fmt.Println("      MENU UPDATE      ")
-	fmt.Println("-----------------------")
-	fmt.Println("1. Tambah Pengeluaran")
-	fmt.Println("2. Edit Data Pengeluaran")
-	fmt.Println("3. Hapus Data Pengeluaran")
-	fmt.Println("4. Exit")
-	fmt.Println("-----------------------")
-}
-
-func historyTransaksi(daftar data, jumlahData int) {
-	if jumlahData == 0 {
-		fmt.Println("Belum ada pengeluaran.")
-		return
-	}
-	fmt.Println("Riwayat Pengeluaran:")
-	for i := 0; i < jumlahData; i++ {
-		fmt.Printf("%d. %s - Rp %d\n", i+1, daftar[i].Kategori, daftar[i].Nominal)
-	}
-}
-
-func menuCariData(){
-	fmt.Println("-----------------------")
-	fmt.Println("      MENU UPDATE      ")
-	fmt.Println("-----------------------")
-	fmt.Println("1. Berdasarkan Kategori")
-	fmt.Println("2. Berdasarkan Nominal")
-	fmt.Println("3. Exit")
-	fmt.Println("-----------------------")
-}
-
-func cariPengeluaran(daftar *data, jumlahData *int){
-	var pilih int
-	for pilih != 3{
-		menuCariData()
-		fmt.Print("Pilih (1/2/3)? ")
-		fmt.Scan(&pilih)
-		if pilih == 1 {
-			var kategori string
-			fmt.Print("Masukkan kategori: ")
-			fmt.Scan(&kategori)
-			sequentialSearch(*daftar, *jumlahData, kategori)
-		} else if pilih == 2 {
-			var nominal int
-			fmt.Print("Masukkan nominal: Rp ")
-			fmt.Scan(&nominal)
-			binarySearch(*daftar, *jumlahData, nominal)
-		}
 	}
 }
