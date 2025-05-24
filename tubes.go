@@ -7,7 +7,7 @@ type pengeluaran struct {
 	Nominal  int
 }
 
-const maxData int = 100
+const maxData int = 1000
 
 type data [maxData]pengeluaran
 
@@ -22,9 +22,8 @@ func menu() {
 	fmt.Println("2. Update Saldo")
 	fmt.Println("3. History Transaksi")
 	fmt.Println("4. Selisih Anggaran")
-	fmt.Println("5. Cari Pengeluaran (Sequential Search)")
-	fmt.Println("6. Cari Pengeluaran (Binary Search)")
-	fmt.Println("7. Exit")
+	fmt.Println("5. Cari Pengeluaran")
+	fmt.Println("6. Exit")
 	fmt.Println("-----------------------")
 }
 
@@ -50,15 +49,7 @@ func main() {
 		} else if pilih == 4 {
 			selisihAnggaran(daftar, jumlahData)
 		} else if pilih == 5 {
-			var kategori string
-			fmt.Print("Masukkan kategori: ")
-			fmt.Scan(&kategori)
-			sequentialSearch(daftar, jumlahData, kategori)
-		} else if pilih == 6 {
-			var kategori string
-			fmt.Print("Masukkan kategori: ")
-			fmt.Scan(&kategori)
-			binarySearch(daftar, jumlahData, kategori)
+			cariPengeluaran(&daftar, &jumlahData)
 		}
 	}
 }
@@ -215,34 +206,42 @@ func sequentialSearch(daftar data, jumlahData int, kategori string) {
 	}
 }
 
-func bubbleSort(daftar *data, jumlahData int) {
-	for i := 0; i < jumlahData-1; i++ {
-		for j := 0; j < jumlahData-i-1; j++ {
-			if daftar[j].Kategori > daftar[j+1].Kategori {
-				daftar[j], daftar[j+1] = daftar[j+1], daftar[j]
-			}
+func insertionSort(daftar *data, jumlahData int) {
+	for i := 1; i < jumlahData; i++ {
+		idx := daftar[i]
+		j := i - 1
+		for j >= 0 && daftar[j].Nominal > idx.Nominal {
+			daftar[j+1] = daftar[j]
+			j--
 		}
+		daftar[j+1] = idx
 	}
 }
 
-func binarySearch(daftar data, jumlahData int, kategori string) {
-	bubbleSort(&daftar, jumlahData)
+func binarySearch(daftar data, jumlahData int, nominal int) {
+	insertionSort(&daftar, jumlahData)
 	left := 0
 	right := jumlahData - 1
 	ditemukan := false
 	for left <= right && !ditemukan {
 		mid := (left + right) / 2
-		if daftar[mid].Kategori == kategori {
-			fmt.Printf("Ditemukan: %s - Rp %d (urutan ke-%d pengeluaran terbesar)\n", daftar[mid].Kategori, daftar[mid].Nominal, mid+1)
+		if daftar[mid].Nominal == nominal {
+			fmt.Printf("Ditemukan: %s - Rp %d (di indeks %d setelah diurutkan)\n", daftar[mid].Kategori, daftar[mid].Nominal, mid+1)
 			ditemukan = true
-		} else if kategori < daftar[mid].Kategori {
+			for i := mid - 1; i >= 0 && daftar[i].Nominal == nominal; i-- {
+				fmt.Printf("Ditemukan: %s - Rp %d (di indeks %d setelah diurutkan)\n", daftar[i].Kategori, daftar[i].Nominal, i+1)
+			}
+			for i := mid + 1; i < jumlahData && daftar[i].Nominal == nominal; i++ {
+				fmt.Printf("Ditemukan: %s - Rp %d (di indeks %d setelah diurutkan)\n", daftar[i].Kategori, daftar[i].Nominal, i+1)
+			}
+		} else if nominal < daftar[mid].Nominal {
 			right = mid - 1
 		} else {
 			left = mid + 1
 		}
 	}
 	if !ditemukan {
-		fmt.Println("Kategori tidak ditemukan")
+		fmt.Println("Nominal tidak ditemukan.")
 	}
 }
 
@@ -268,3 +267,32 @@ func historyTransaksi(daftar data, jumlahData int) {
 	}
 }
 
+func menuCariData(){
+	fmt.Println("-----------------------")
+	fmt.Println("      MENU UPDATE      ")
+	fmt.Println("-----------------------")
+	fmt.Println("1. Berdasarkan Kategori")
+	fmt.Println("2. Berdasarkan Nominal")
+	fmt.Println("3. Exit")
+	fmt.Println("-----------------------")
+}
+
+func cariPengeluaran(daftar *data, jumlahData *int){
+	var pilih int
+	for pilih != 3{
+		menuCariData()
+		fmt.Print("Pilih (1/2/3)? ")
+		fmt.Scan(&pilih)
+		if pilih == 1 {
+			var kategori string
+			fmt.Print("Masukkan kategori: ")
+			fmt.Scan(&kategori)
+			sequentialSearch(*daftar, *jumlahData, kategori)
+		} else if pilih == 2 {
+			var nominal int
+			fmt.Print("Masukkan nominal: Rp ")
+			fmt.Scan(&nominal)
+			binarySearch(*daftar, *jumlahData, nominal)
+		}
+	}
+}
