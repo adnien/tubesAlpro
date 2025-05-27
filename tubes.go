@@ -2,18 +2,22 @@ package main
 
 import "fmt"
 
+// Struct untuk menyimpan data pengeluaran
 type pengeluaran struct {
 	Kategori string
 	Nominal  int
 }
 
-const maxData int = 1000
+const maxData int = 1000 // Kapasitas maksimum data pengeluaran
 
+// Tipe data array untuk menyimpan semua pengeluaran
 type data [maxData]pengeluaran
 
+// Variabel global untuk menyimpan saldo dan anggaran awal
 var saldo int
 var anggaranAwal int
 
+// Fungsi menampilkan menu utama
 func menu() {
 	fmt.Println("-----------------------")
 	fmt.Println("        M E N U        ")
@@ -28,6 +32,7 @@ func menu() {
 }
 
 func main() {
+	// Input saldo awal dari pengguna
 	fmt.Print("Masukkan saldo awal: Rp ")
 	fmt.Scan(&anggaranAwal)
 	saldo = anggaranAwal
@@ -35,6 +40,8 @@ func main() {
 	var pilih int
 	var daftar data
 	var jumlahData int
+
+	// Perulangan menu utama sampai pengguna memilih keluar (6)
 	for pilih != 6 {
 		menu()
 		fmt.Print("Pilih (1/2/3/4/5/6/7)? ")
@@ -54,6 +61,7 @@ func main() {
 	}
 }
 
+// Menampilkan informasi saldo, anggaran awal, dan total pengeluaran
 func infoSaldo(daftar data, jumlahData int) {
 	total := 0
 	for i := 0; i < jumlahData; i++ {
@@ -64,6 +72,7 @@ func infoSaldo(daftar data, jumlahData int) {
 	fmt.Printf("Total pengeluaran: Rp. %d\n", total)
 }
 
+// Menampilkan menu update dan memanggil fungsi tambah/edit/hapus
 func updateSaldo(daftar *data, jumlahData *int) {
 	var pilih int
 	for pilih != 4 {
@@ -80,6 +89,7 @@ func updateSaldo(daftar *data, jumlahData *int) {
 	}
 }
 
+// Menu untuk opsi update saldo
 func menuUpdate() {
 	fmt.Println("---------------------------")
 	fmt.Println("        MENU UPDATE        ")
@@ -91,6 +101,7 @@ func menuUpdate() {
 	fmt.Println("---------------------------")
 }
 
+// Membaca input kategori dari pengguna
 func bacaKategori(label string) string {
 	var kategori string
 	fmt.Print(label)
@@ -98,6 +109,7 @@ func bacaKategori(label string) string {
 	return kategori
 }
 
+// Membaca input jumlah nominal dari pengguna
 func bacaJumlah(label string) int {
 	fmt.Print(label)
 	var jumlah int
@@ -105,6 +117,7 @@ func bacaJumlah(label string) int {
 	return jumlah
 }
 
+// Menambahkan data pengeluaran baru ke daftar
 func tambahPengeluaran(daftar *data, jumlahData *int) {
 	if *jumlahData >= maxData {
 		fmt.Println("Data penuh.")
@@ -118,6 +131,7 @@ func tambahPengeluaran(daftar *data, jumlahData *int) {
 	fmt.Println("Saldo berhasil diupdate")
 }
 
+// Mengedit data pengeluaran berdasarkan pilihan pengguna
 func editPengeluaran(daftar *data, jumlahData *int) {
 	if *jumlahData == 0 {
 		fmt.Println("Belum ada pengeluaran")
@@ -135,6 +149,7 @@ func editPengeluaran(daftar *data, jumlahData *int) {
 	fmt.Println("Saldo berhasil diupdate")
 }
 
+// Menampilkan daftar pengeluaran
 func menuPengeluaran(daftar *data, jumlahData int) {
 	fmt.Println("Daftar Pengeluaran")
 	for i := 0; i < jumlahData; i++ {
@@ -142,6 +157,7 @@ func menuPengeluaran(daftar *data, jumlahData int) {
 	}
 }
 
+// Membaca nomor pengeluaran yang dipilih pengguna
 func noPengeluaran(jumlahData int) int {
 	var nomor int
 	fmt.Print("Masukkan nomor pengeluaran: ")
@@ -153,6 +169,7 @@ func noPengeluaran(jumlahData int) int {
 	return nomor - 1
 }
 
+// Menghapus data pengeluaran
 func hapusPengeluaran(daftar *data, jumlahData *int) {
 	if *jumlahData == 0 {
 		fmt.Println("Belum ada pengeluaran")
@@ -172,6 +189,7 @@ func hapusPengeluaran(daftar *data, jumlahData *int) {
 	fmt.Println("Saldo berhasil diupdate")
 }
 
+// Menampilkan riwayat transaksi berdasarkan kriteria tertentu
 func historyTransaksi(daftar data, jumlahData int) {
 	if jumlahData == 0 {
 		fmt.Println("Belum ada pengeluaran.")
@@ -200,6 +218,7 @@ func historyTransaksi(daftar data, jumlahData int) {
 	}
 }
 
+// Menu riwayat transaksi
 func menuHistory() {
 	fmt.Println("---------------------------------")
 	fmt.Println("          MENU HISTORY           ")
@@ -211,12 +230,14 @@ func menuHistory() {
 	fmt.Println("---------------------------------")
 }
 
+// Menampilkan isi daftar pengeluaran
 func tampilkanHistory(daftar data, jumlahData int) {
 	for i := 0; i < jumlahData; i++ {
 		fmt.Printf("%d. %s - Rp %d\n", i+1, daftar[i].Kategori, daftar[i].Nominal)
 	}
 }
 
+// Menyalin data array untuk proses sorting tanpa mengubah aslinya
 func copyData(dataAsli data, jumlahData int) data {
 	var dataSalinan data
 	for i := 0; i < jumlahData; i++ {
@@ -225,6 +246,7 @@ func copyData(dataAsli data, jumlahData int) data {
 	return dataSalinan
 }
 
+// Insertion sort untuk mengurutkan dari kecil ke besar
 func insertionSortNaik(daftar *data, jumlahData int) {
 	for i := 1; i < jumlahData; i++ {
 		temp := daftar[i]
@@ -237,6 +259,7 @@ func insertionSortNaik(daftar *data, jumlahData int) {
 	}
 }
 
+// Selection sort untuk mengurutkan dari besar ke kecil
 func selectionSortTurun(daftar *data, jumlahData int) {
 	for i := 0; i < jumlahData-1; i++ {
 		maxIdx := i
@@ -249,6 +272,7 @@ func selectionSortTurun(daftar *data, jumlahData int) {
 	}
 }
 
+// Menghitung selisih anggaran dan memberikan saran penghematan jika perlu
 func selisihAnggaran(daftar data, jumlahData int) {
 	total := 0
 	for i := 0; i < jumlahData; i++ {
@@ -266,6 +290,7 @@ func selisihAnggaran(daftar data, jumlahData int) {
 	}
 }
 
+// Memberikan saran kategori yang paling besar pengeluarannya untuk dihemat
 func saranHemat(daftar data, jumlahData int) {
 	if jumlahData == 0 {
 		fmt.Println("Tidak ada data pengeluaran.")
@@ -282,6 +307,7 @@ func saranHemat(daftar data, jumlahData int) {
 	fmt.Printf("- Kategori: %s, Jumlah: Rp. %d\n", kat, maks)
 }
 
+// Menu pencarian data pengeluaran
 func cariPengeluaran(daftar *data, jumlahData *int){
 	var pilih int
 	for pilih != 3{
@@ -302,6 +328,7 @@ func cariPengeluaran(daftar *data, jumlahData *int){
 	}
 }
 
+// Tampilan menu cari data
 func menuCariData(){
 	fmt.Println("-------------------------")
 	fmt.Println("       MENU UPDATE       ")
@@ -312,6 +339,7 @@ func menuCariData(){
 	fmt.Println("-------------------------")
 }
 
+// Mencari data pengeluaran berdasarkan kategori (linear search)
 func sequentialSearch(daftar data, jumlahData int, kategori string) {
 	ditemukan := false
 	for i := 0; i < jumlahData; i++ {
@@ -325,6 +353,7 @@ func sequentialSearch(daftar data, jumlahData int, kategori string) {
 	}
 }
 
+// Sorting data terlebih dahulu, lalu mencari nominal dengan binary search
 func insertionSort(daftar *data, jumlahData int) {
 	for i := 1; i < jumlahData; i++ {
 		idx := daftar[i]
@@ -337,6 +366,7 @@ func insertionSort(daftar *data, jumlahData int) {
 	}
 }
 
+// Mencari pengeluaran berdasarkan nominal (binary search)
 func binarySearch(daftar data, jumlahData int, nominal int) {
 	insertionSort(&daftar, jumlahData)
 	left := 0
