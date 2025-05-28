@@ -119,16 +119,16 @@ func bacaJumlah(label string) int {
 
 // Menambahkan data pengeluaran baru ke daftar
 func tambahPengeluaran(daftar *data, jumlahData *int) {
-	if *jumlahData >= maxData {
-		fmt.Println("Data penuh.")
-		return
-	}
-	kategori := bacaKategori("Masukkan Kategori (Akomodasi/Transportasi/Konsumsi/Hiburan/Belanja): ")
-	jumlah := bacaJumlah("Masukkan Jumlah: ")
-	daftar[*jumlahData] = pengeluaran{kategori, jumlah}
-	*jumlahData++
-	saldo -= jumlah
-	fmt.Println("Saldo berhasil diupdate")
+    if *jumlahData >= maxData {
+        fmt.Println("Data penuh.")
+    } else {
+        kategori := bacaKategori("Masukkan Kategori (Akomodasi/Transportasi/Konsumsi/Hiburan/Belanja): ")
+        jumlah := bacaJumlah("Masukkan Jumlah: ")
+        daftar[*jumlahData] = pengeluaran{kategori, jumlah}
+        *jumlahData++
+        saldo -= jumlah
+        fmt.Println("Saldo berhasil diupdate")
+    }
 }
 
 // Mengedit data pengeluaran berdasarkan pilihan pengguna
