@@ -304,7 +304,8 @@ func saranHemat(daftar data, jumlahData int) {
 			kat = daftar[i].Kategori
 		}
 	}
-	fmt.Printf("- Kategori: %s, Jumlah: Rp. %d\n", kat, maks)
+	fmt.Println("Pengeluaran Terbesar:")
+	fmt.Printf("Kategori: %s, Jumlah: Rp. %d\n", kat, maks)
 }
 
 // Menu pencarian data pengeluaran
