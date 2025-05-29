@@ -135,18 +135,19 @@ func tambahPengeluaran(daftar *data, jumlahData *int) {
 func editPengeluaran(daftar *data, jumlahData *int) {
 	if *jumlahData == 0 {
 		fmt.Println("Belum ada pengeluaran")
-		return
+	} else {
+		menuPengeluaran(daftar, *jumlahData)
+		nomor := noPengeluaran(*jumlahData)
+		if nomor == -1 {
+			fmt.Println("Edit dibatalkan")
+		} else {
+			nominalBaru := bacaJumlah("Masukkan jumlah baru: ")
+			nominalLama := daftar[nomor].Nominal
+			daftar[nomor].Nominal = nominalBaru
+			saldo += nominalLama - nominalBaru
+			fmt.Println("Saldo berhasil diupdate")
+		}
 	}
-	menuPengeluaran(daftar, *jumlahData)
-	nomor := noPengeluaran(*jumlahData)
-	if nomor == -1 {
-		return
-	}
-	nominalBaru := bacaJumlah("Masukkan jumlah baru: ")
-	nominalLama := daftar[nomor].Nominal
-	daftar[nomor].Nominal = nominalBaru
-	saldo += nominalLama - nominalBaru
-	fmt.Println("Saldo berhasil diupdate")
 }
 
 // Menampilkan daftar pengeluaran
@@ -173,47 +174,48 @@ func noPengeluaran(jumlahData int) int {
 func hapusPengeluaran(daftar *data, jumlahData *int) {
 	if *jumlahData == 0 {
 		fmt.Println("Belum ada pengeluaran")
-		return
+	} else {
+		menuPengeluaran(daftar, *jumlahData)
+		nomor := noPengeluaran(*jumlahData)
+		if nomor == -1 {
+			fmt.Println("Penghapusan dibatalkan")
+		} else {
+			nominalDihapus := daftar[nomor].Nominal
+			for i := nomor; i < *jumlahData-1; i++ {
+				daftar[i] = daftar[i+1]
+			}
+			*jumlahData--
+			saldo += nominalDihapus
+			fmt.Println("Saldo berhasil diupdate")
+		}
 	}
-	menuPengeluaran(daftar, *jumlahData)
-	nomor := noPengeluaran(*jumlahData)
-	if nomor == -1 {
-		return
-	}
-	nominalDihapus := daftar[nomor].Nominal
-	for i := nomor; i < *jumlahData-1; i++ {
-		daftar[i] = daftar[i+1]
-	}
-	*jumlahData--
-	saldo += nominalDihapus
-	fmt.Println("Saldo berhasil diupdate")
 }
 
 // Menampilkan riwayat transaksi berdasarkan kriteria tertentu
 func historyTransaksi(daftar data, jumlahData int) {
 	if jumlahData == 0 {
 		fmt.Println("Belum ada pengeluaran.")
-		return
-	}
-	var pilih int
-	for pilih != 4 {
-		menuHistory()
-		fmt.Print("Pilih (1/2/3/4)? ")
-		fmt.Scan(&pilih)
+	} else {
+		var pilih int
+		for pilih != 4 {
+			menuHistory()
+			fmt.Print("Pilih (1/2/3/4)? ")
+			fmt.Scan(&pilih)
 
-		if pilih == 1 {
-			fmt.Println("Riwayat berdasarkan waktu input:")
-			tampilkanHistory(daftar, jumlahData)
-		} else if pilih == 2 {
-			fmt.Println("Riwayat berdasarkan nominal terbesar:")
-			salin := copyData(daftar, jumlahData)
-			selectionSortTurun(&salin, jumlahData)
-			tampilkanHistory(salin, jumlahData)
-		} else if pilih == 3 {
-			fmt.Println("Riwayat berdasarkan nominal terkecil:")
-			salin := copyData(daftar, jumlahData)
-			insertionSortNaik(&salin, jumlahData)
-			tampilkanHistory(salin, jumlahData)
+			if pilih == 1 {
+				fmt.Println("Riwayat berdasarkan waktu input:")
+				tampilkanHistory(daftar, jumlahData)
+			} else if pilih == 2 {
+				fmt.Println("Riwayat berdasarkan nominal terbesar:")
+				salin := copyData(daftar, jumlahData)
+				selectionSortTurun(&salin, jumlahData)
+				tampilkanHistory(salin, jumlahData)
+			} else if pilih == 3 {
+				fmt.Println("Riwayat berdasarkan nominal terkecil:")
+				salin := copyData(daftar, jumlahData)
+				insertionSortNaik(&salin, jumlahData)
+				tampilkanHistory(salin, jumlahData)
+			}
 		}
 	}
 }
@@ -294,18 +296,18 @@ func selisihAnggaran(daftar data, jumlahData int) {
 func saranHemat(daftar data, jumlahData int) {
 	if jumlahData == 0 {
 		fmt.Println("Tidak ada data pengeluaran.")
-		return
-	}
-	maks := daftar[0].Nominal
-	kat := daftar[0].Kategori
-	for i := 1; i < jumlahData; i++ {
-		if daftar[i].Nominal > maks {
-			maks = daftar[i].Nominal
-			kat = daftar[i].Kategori
+	} else {
+		maks := daftar[0].Nominal
+		kat := daftar[0].Kategori
+		for i := 1; i < jumlahData; i++ {
+			if daftar[i].Nominal > maks {
+				maks = daftar[i].Nominal
+				kat = daftar[i].Kategori
+			}
 		}
+		fmt.Println("Pengeluaran Terbesar:")
+		fmt.Printf("Kategori: %s, Jumlah: Rp. %d\n", kat, maks)
 	}
-	fmt.Println("Pengeluaran Terbesar:")
-	fmt.Printf("Kategori: %s, Jumlah: Rp. %d\n", kat, maks)
 }
 
 // Menu pencarian data pengeluaran
