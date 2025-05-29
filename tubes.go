@@ -19,16 +19,17 @@ var anggaranAwal int
 
 // Fungsi menampilkan menu utama
 func menu() {
-	fmt.Println("-----------------------")
-	fmt.Println("        M E N U        ")
-	fmt.Println("-----------------------")
+	fmt.Println("---------------------------")
+	fmt.Println("          M E N U          ")
+	fmt.Println("---------------------------")
 	fmt.Println("1. Info Saldo")
 	fmt.Println("2. Update Saldo")
 	fmt.Println("3. History Transaksi")
 	fmt.Println("4. Selisih Anggaran")
 	fmt.Println("5. Cari Pengeluaran")
-	fmt.Println("6. Exit")
-	fmt.Println("-----------------------")
+	fmt.Println("6. Pengeluaran Per Kategori")
+	fmt.Println("7. Exit")
+	fmt.Println("---------------------------")
 }
 
 func main() {
@@ -42,7 +43,7 @@ func main() {
 	var jumlahData int
 
 	// Perulangan menu utama sampai pengguna memilih keluar (6)
-	for pilih != 6 {
+	for pilih != 7 {
 		menu()
 		fmt.Print("Pilih (1/2/3/4/5/6/7)? ")
 		fmt.Scan(&pilih)
@@ -57,6 +58,8 @@ func main() {
 			selisihAnggaran(daftar, jumlahData)
 		} else if pilih == 5 {
 			cariPengeluaran(&daftar, &jumlahData)
+		} else if pilih == 6{
+			pengeluaranPerKategori(daftar, jumlahData)
 		}
 	}
 }
@@ -347,7 +350,8 @@ func sequentialSearch(daftar data, jumlahData int, kategori string) {
 	ditemukan := false
 	for i := 0; i < jumlahData; i++ {
 		if daftar[i].Kategori == kategori {
-			fmt.Printf("Ditemukan: %s - Rp %d\n", daftar[i].Kategori, daftar[i].Nominal)
+			fmt.Println("Ditemukan:")
+			fmt.Printf("- %s - Rp %d\n", daftar[i].Kategori, daftar[i].Nominal)
 			ditemukan = true
 		}
 	}
@@ -395,4 +399,27 @@ func binarySearch(daftar data, jumlahData int, nominal int) {
 	if !ditemukan {
 		fmt.Println("Nominal tidak ditemukan.")
 	}
+}
+
+func pengeluaranPerKategori(daftar data, jumlahData int) {
+	var akomodasi, transportasi, konsumsi, hiburan, belanja int
+	for i := 0; i < jumlahData; i++ {
+		if daftar[i].Kategori == "Akomodasi" || daftar[i].Kategori == "akomodasi"{
+			akomodasi += daftar[i].Nominal
+		} else if daftar[i].Kategori == "Transportasi" || daftar[i].Kategori == "transportasi"{
+			transportasi += daftar[i].Nominal
+		} else if daftar[i].Kategori == "Konsumsi" || daftar[i].Kategori == "konsumsi" {
+			konsumsi += daftar[i].Nominal
+		} else if daftar[i].Kategori == "Hiburan" || daftar[i].Kategori == "hiburan"{
+			hiburan += daftar[i].Nominal
+		} else if daftar[i].Kategori == "Belanja" || daftar[i].Kategori == "belanja"{
+			belanja += daftar[i].Nominal
+		}
+	}
+	fmt.Println("Laporan Pengeluaran per Kategori:")
+	fmt.Printf("- Akomodasi     : Rp. %d\n", akomodasi)
+	fmt.Printf("- Transportasi  : Rp. %d\n", transportasi)
+	fmt.Printf("- Konsumsi      : Rp. %d\n", konsumsi)
+	fmt.Printf("- Hiburan       : Rp. %d\n", hiburan)
+	fmt.Printf("- Belanja       : Rp. %d\n", belanja)
 }
