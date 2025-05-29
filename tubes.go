@@ -360,35 +360,23 @@ func sequentialSearch(daftar data, jumlahData int, kategori string) {
 	}
 }
 
-// Sorting data terlebih dahulu, lalu mencari nominal dengan binary search
-func insertionSort(daftar *data, jumlahData int) {
-	for i := 1; i < jumlahData; i++ {
-		idx := daftar[i]
-		j := i - 1
-		for j >= 0 && daftar[j].Nominal > idx.Nominal {
-			daftar[j+1] = daftar[j]
-			j--
-		}
-		daftar[j+1] = idx
-	}
-}
-
 // Mencari pengeluaran berdasarkan nominal (binary search)
 func binarySearch(daftar data, jumlahData int, nominal int) {
-	insertionSort(&daftar, jumlahData)
+	insertionSortNaik(&daftar, jumlahData)
 	left := 0
 	right := jumlahData - 1
 	ditemukan := false
 	for left <= right && !ditemukan {
 		mid := (left + right) / 2
 		if daftar[mid].Nominal == nominal {
-			fmt.Printf("Ditemukan: %s - Rp %d\n", daftar[mid].Kategori, daftar[mid].Nominal)
+			fmt.Println("Ditemukan:")
+			fmt.Printf("- %s, Rp %d\n", daftar[mid].Kategori, daftar[mid].Nominal)
 			ditemukan = true
 			for i := mid - 1; i >= 0 && daftar[i].Nominal == nominal; i-- {
-				fmt.Printf("Ditemukan: %s - Rp %d\n", daftar[i].Kategori, daftar[i].Nominal)
+				fmt.Printf("- %s, Rp %d\n", daftar[i].Kategori, daftar[i].Nominal)
 			}
 			for i := mid + 1; i < jumlahData && daftar[i].Nominal == nominal; i++ {
-				fmt.Printf("Ditemukan: %s - Rp %d\n", daftar[i].Kategori, daftar[i].Nominal)
+				fmt.Printf("- %s, Rp %d\n", daftar[i].Kategori, daftar[i].Nominal)
 			}
 		} else if nominal < daftar[mid].Nominal {
 			right = mid - 1
