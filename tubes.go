@@ -237,7 +237,7 @@ func menuHistory() {
 
 // Menampilkan isi daftar pengeluaran
 func tampilkanHistory(daftar data, jumlahData int) {
-	if *jumlahData == 0 {
+	if jumlahData == 0 {
 		fmt.Println("Belum ada pengeluaran")
 	}
 	for i := 0; i < jumlahData; i++ {
@@ -353,15 +353,18 @@ func sequentialSearch(daftar data, jumlahData int, kategori string) {
 	ditemukan := false
 	for i := 0; i < jumlahData; i++ {
 		if daftar[i].Kategori == kategori {
-			fmt.Println("Ditemukan:")
+			if !ditemukan {
+				fmt.Println("Ditemukan:")
+				ditemukan = true
+			}
 			fmt.Printf("- %s - Rp %d\n", daftar[i].Kategori, daftar[i].Nominal)
-			ditemukan = true
 		}
 	}
 	if !ditemukan {
 		fmt.Println("Kategori tidak ditemukan.")
 	}
 }
+
 
 // Mencari pengeluaran berdasarkan nominal (binary search)
 func binarySearch(daftar data, jumlahData int, nominal int) {
