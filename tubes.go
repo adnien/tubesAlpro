@@ -237,6 +237,9 @@ func menuHistory() {
 
 // Menampilkan isi daftar pengeluaran
 func tampilkanHistory(daftar data, jumlahData int) {
+	if *jumlahData == 0 {
+		fmt.Println("Belum ada pengeluaran")
+	}
 	for i := 0; i < jumlahData; i++ {
 		fmt.Printf("%d. %s - Rp %d\n", i+1, daftar[i].Kategori, daftar[i].Nominal)
 	}
